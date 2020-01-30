@@ -1,2 +1,2 @@
-La revendedora ofrece los priductos en stock a los clientes. si el cliente quiere un producto, se lo pide a la revendedora, la revendedora consulta a Gloria si esta en stock y si Gloria lo tiene, lo entrega, sino, Gloria lo pide a Mica. 
+La revendedora ofrece los productos en stock a los clientes. si el cliente quiere un producto, se lo pide a la revendedora, la revendedora consulta a Gloria si esta en stock y si Gloria lo tiene, lo entrega, sino, Gloria lo pide a Mica. 
 En caso de un pedido a Mica, ella va a Once, lo busca, lo compra y lo envía a Gloria quien luego lo entregará a la revendedora que lo entregará a su vez a el cliente
