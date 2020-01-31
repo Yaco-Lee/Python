@@ -22,7 +22,7 @@ class Gloria:
         self.Revendedoras = []
     
      ### ---- BEHAVIOR ---- ###
-    def AddToStock(self, unaRopa):
+    def AddToStock(self, unaRopa):  ### TAREAAAAAAAAAA ###### 
         self.Stock.append(unaRopa)
     
     def RemoveFromStock(self, ciertaRopa):
