@@ -23,10 +23,13 @@ print(listaincisouno)
 print("Ahora quito los numeros pares de la lista que me quedó")
 
 for x in listaincisouno:
-    if x%2 != 0:
-        print(x)
+    if x%2 == 0:
+        listaincisouno.remove(x)
     else:
         pass
+        
+print(listaincisouno)
+
         
 print("Listo, ya me merezco una birra (? ")
 

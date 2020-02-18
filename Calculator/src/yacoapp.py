@@ -1,32 +1,48 @@
 # ACA ES DONDE VAMOS A DEFINIR LAS COSAS
 def main():
-  operaciones = {
-    "sumar": sumar,
-    "restar": restar,
-    "multiplicar": multiplicar,
-    "dividir": dividir
-  }
+  operaciones = getOperaciones()
+  
   print("tenemos por ahora")
   devuelveListaDeOperaciones(operaciones)
 
-
   print("que deseas?")
-  accion = input()
-  print("poné el primer numero wacheen")
-  primernumero = input()
-  print("ahora el segundo")
-  segundonumero = input()
-  x = int(primernumero)
-  y = int(segundonumero)
+  accion = getAccion() 
+  # print("poné el primer numero wacheen")
+  # primernumero = input()
+  # print("ahora el segundo")
+  # segundonumero = input()
+  # x = int(primernumero)
+  # y = int(segundonumero)
+  numerosACalcular = TomarNumeros()
   busquedaEnOperaciones = operaciones.get(accion)
- 
-  result = busquedaEnOperaciones(x,y)
+  if numerosACalcular.len() < 2:
+    print("Tenias que poner dos numeros!, ahora se rompe todo")
+  result = busquedaEnOperaciones(numerosACalcular[0], numerosACalcular[1])
 
   print(result)
 
+def TomarNumeros():
+  numerosQuePusoElUsuario = []
+  print("Pone un numero")
+  loquepusoelusuario = input()
+  if type(loquepusoelusuario) == int:
+    numerosQuePusoElUsuario.append(int(loquepusoelusuario))
+  else:
+    print("flashaste cualca, no podes poner más numeros")
+  print("calculando...")
+  return numerosQuePusoElUsuario
 
+def getOperaciones():
+  return {
+    "sumar": sumar,
+    "restar": restar,
+    "multiplicar": multiplicar,
+    "dividir": dividir,
+  }
 
-  
+def getAccion():
+  return input()
+
 def restar(x,y):
   return x-y
 

@@ -16,30 +16,32 @@ class Gloria:
     # input -> proceso de esa informacion -> output
     def __init__(self): 
         ### ---- DATA ---- ###
-        remeraS = Ropa("una remera", "S", "10")
-        remeraL = Ropa("una remera", "L", "20")
-        self.Stock = [remeraS,  remeraL]  # [un objeto Ropa, otro objeto Ropa]
+        self.Stock = []  # [un objeto Ropa, otro objeto Ropa]
         self.Revendedoras = []
     
      ### ---- BEHAVIOR ---- ###
     def AddToStock(self, unaRopa):  ### TAREAAAAAAAAAA ###### 
         self.Stock.append(unaRopa)
     
-    def RemoveFromStock(self, ciertaRopa):
-        quitarEstaRopa = next(ropa for ropa in self.Stock if ropa.Nombre == ciertaRopa)
+    def RemoveFromStock(self, ciertaRopa : str):
+        quitarEstaRopa = next(ropa for ropa in self.Stock if ropa.Nombre == ciertaRopa) # a partir de la funcion next estamos haciendo una busqueda en el stock por una ropa con el nombre igual a cierta ropa (que es un string)
         self.Stock.remove(quitarEstaRopa)
     
     def ShowStock(self):
-        for itemRopa in self.Stock:
-            print(itemRopa.Nombre)
+        if len(self.Stock) == 0:
+            print("Nada por aquí")
+        else:
+            for itemRopa in self.Stock: 
+                print(itemRopa.Nombre)
+            
         
-    def CountStock(self, consultaRopa):        
+    def CountStock(self, consultaRopa: str):        
         return sum(ropa.Nombre == consultaRopa for ropa in self.Stock)
       
 
         
 class Revendedora:
-    def __init__(self, nombre, categoria, almacen):
+    def __init__(self, nombre: str, categoria: str, almacen):
          ### ---- DATA ---- ###
         self.Pedidos = []
         self.Clientes = []
@@ -47,14 +49,30 @@ class Revendedora:
         self.Categoría = categoria
         self.Gloria = almacen
         
+        
     
     ### ---- BEHAVIOR ---- ###
-    def Vender(self, vendeEstaRopa):
-        if self.Gloria.CountStock(vendeEstaRopa) > 0:
-            self.Gloria.RemoveFromStock(vendeEstaRopa)
-            print("Se vendio la ropa {}".format(vendeEstaRopa))
+    def Vender(self, vendeEstaRopa: "Ropa"):
+        if self.Gloria.CountStock(vendeEstaRopa.Nombre) > 0:
+            self.Gloria.RemoveFromStock(vendeEstaRopa.Nombre)
+            print("Se vendio la ropa {}".format(vendeEstaRopa.Nombre))
         else:
-            print("No hay mas de este producto: {}".format(vendeEstaRopa))
+            print("No hay mas de este producto: {}".format(vendeEstaRopa.Nombre))
+            print("queres realizar un pedido de {}? si/no".format(vendeEstaRopa.Nombre))
+            if input().lower() == "si":
+                self.Pedidos.append(vendeEstaRopa)
+                print("Se realizó exitosamente el pedido")
+            else:
+                print("No se realizó ningun pedido")
+                
+    
+    def ShowPedidos(self):
+        if len(self.Pedidos) == 0:
+            print("Nada por aquí")
+        else:
+            for itemRopa in self.Pedidos: 
+                print(itemRopa.Nombre)        
+            
             
     
     
@@ -76,16 +94,19 @@ class Revendedora:
 # print("--- vamos a revisar el stock del almacen de nuevo ---")
 # gloria.ShowStock()
 
-print("--- Setup ---")
-gloria = Gloria()
-silvinaRevendedora = Revendedora("Silvina", "A", gloria)
-print("--- vamos a revisar el stock del almacen primero ---")
-gloria.ShowStock()
-print("--- Silvina vende una remera ---")
-silvinaRevendedora.Vender("una remera")
-print("--- vamos a revisar el stock del almacen de nuevo ---")
-gloria.ShowStock()
+# print("--- Setup ---")
+# gloria = Gloria()
+# yaco = Gloria()
+# silvinaRevendedora = Revendedora("Silvina", "A", gloria)
+# print("--- vamos a revisar el stock del almacen primero ---")
+# gloria.ShowStock()
+# print("--- Silvina vende una remera ---")
+# silvinaRevendedora.Vender("una remera")
+# print("--- vamos a revisar el stock del almacen de nuevo ---")
+# gloria.ShowStock()
 
+# revendedoranueva = Revendedora("Laura","A", gloria)
+# revendedoranueva2 = Revendedora("Luisa", "B", yaco)
 
 # print("------ Creo una Gloria y muestro el stock, tiene que comenzar con dos remeras ---------")
 # gloria = Gloria()
@@ -107,13 +128,28 @@ gloria.ShowStock()
 # print("qué estás buscando?")
 # gloria.FindStock("una remera")
 
-
-
-
 # print("Quito una remera")
 # print("Nuevo stock")
 # gloria.RemoveFromStock("una remera")
 # gloria.ShowStock()
+
+# -------------------------------
+# ----- Tests -----
+
+almacendeprueba = Gloria()
+remera1 = Ropa("remeraS", "S", 200)
+almacendeprueba.AddToStock(remera1)
+almacendeprueba.ShowStock()
+# almacendeprueba.RemoveFromStock(remera1.Nombre)
+# almacendeprueba.ShowStock()
+revendedoratest = Revendedora("Martita", "A", almacendeprueba)
+revendedoratest.Vender(remera1)
+almacendeprueba.ShowStock()
+otrarevendedoratest = Revendedora("Paula", "B", almacendeprueba)
+otrarevendedoratest.Vender(remera1)
+otrarevendedoratest.ShowPedidos()
+
+
 
 
 
