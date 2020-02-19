@@ -5,11 +5,14 @@
 
 class Ropa:
     
-    def __init__(self, nombre, talla, precio): # los nombres de los argumentos van con camelCase
+    def __init__(self, nombre : str, talla : str, precio : int, codigoDeBarra : str): # los nombres de los argumentos van con camelCase
         ### ---- DATA ---- ###
         self.Nombre = nombre
         self.Talla = talla # los nombres de los atributos (propiedades, caracteristicas) de la clase van con PascalCase
         self.Precio = precio
+        self.CodigoDeBarra = codigoDeBarra
+
+
 
 class Gloria:
     
@@ -23,8 +26,8 @@ class Gloria:
     def AddToStock(self, unaRopa):  ### TAREAAAAAAAAAA ###### 
         self.Stock.append(unaRopa)
     
-    def RemoveFromStock(self, ciertaRopa : str):
-        quitarEstaRopa = next(ropa for ropa in self.Stock if ropa.Nombre == ciertaRopa) # a partir de la funcion next estamos haciendo una busqueda en el stock por una ropa con el nombre igual a cierta ropa (que es un string)
+    def RemoveFromStock(self, ciertaRopa : "Ropa"):
+        quitarEstaRopa = next(ropa for ropa in self.Stock if ropa.CodigoDeBarra == ciertaRopa.CodigoDeBarra) # a partir de la funcion next estamos haciendo una busqueda en el stock por una ropa con el mismo codigo de barra
         self.Stock.remove(quitarEstaRopa)
     
     def ShowStock(self):
@@ -32,14 +35,19 @@ class Gloria:
             print("Nada por aquí")
         else:
             for itemRopa in self.Stock: 
-                print(itemRopa.Nombre)
+                print("Tenemos {} con el codigo {}".format(itemRopa.Nombre, itemRopa.CodigoDeBarra))
             
-        
-    def CountStock(self, consultaRopa: str):        
-        return sum(ropa.Nombre == consultaRopa for ropa in self.Stock)
+    # TODO please, do not use for the moment    
+    def CountStock(self, consultaRopa: "Ropa"):        
+        return sum(ropa.Nombre == consultaRopa.Nombre and ropa.Talla == ropa.Talla for ropa in self.Stock)
       
+    # revendedora le pide al almacen que busque una determinada ropa y se la de
+    def SearchRopa(self, searchRopa: "Ropa") -> "Ropa":
+        ropaEncontrada = next(ropa for ropa in self.Stock if ropa.Nombre == ciertaRopa.Nombre and ropa.Talla == ciertaRopa.Talla)
+        return ropaEncontrada
 
-        
+
+
 class Revendedora:
     def __init__(self, nombre: str, categoria: str, almacen):
          ### ---- DATA ---- ###
@@ -49,13 +57,11 @@ class Revendedora:
         self.Categoría = categoria
         self.Gloria = almacen
         
-        
-    
     ### ---- BEHAVIOR ---- ###
     def Vender(self, vendeEstaRopa: "Ropa"):
-        if self.Gloria.CountStock(vendeEstaRopa.Nombre) > 0:
-            self.Gloria.RemoveFromStock(vendeEstaRopa.Nombre)
-            print("Se vendio la ropa {}".format(vendeEstaRopa.Nombre))
+        if self.Gloria.SearchRopa(vendeEstaRopa) > 0:
+            self.Gloria.RemoveFromStock(vendeEstaRopa)
+            print("Se vendio la ropa {}, en talle {}, con codigo de barra {}".format(vendeEstaRopa.Nombre, vendeEstaRopa.Talla, vendeEstaRopa.CodigoDeBarra))
         else:
             print("No hay mas de este producto: {}".format(vendeEstaRopa.Nombre))
             print("queres realizar un pedido de {}? si/no".format(vendeEstaRopa.Nombre))
@@ -64,14 +70,13 @@ class Revendedora:
                 print("Se realizó exitosamente el pedido")
             else:
                 print("No se realizó ningun pedido")
-                
     
     def ShowPedidos(self):
         if len(self.Pedidos) == 0:
             print("Nada por aquí")
         else:
             for itemRopa in self.Pedidos: 
-                print(itemRopa.Nombre)        
+                print("Tenes pedido {} en talle {}".format(itemRopa.Nombre, itemRopa.Talla))        
             
             
     
@@ -137,17 +142,17 @@ class Revendedora:
 # ----- Tests -----
 
 almacendeprueba = Gloria()
-remera1 = Ropa("remeraS", "S", 200)
+remera1 = Ropa("remeraS", "S", 200, "AAA111")
 almacendeprueba.AddToStock(remera1)
 almacendeprueba.ShowStock()
 # almacendeprueba.RemoveFromStock(remera1.Nombre)
 # almacendeprueba.ShowStock()
-revendedoratest = Revendedora("Martita", "A", almacendeprueba)
-revendedoratest.Vender(remera1)
-almacendeprueba.ShowStock()
-otrarevendedoratest = Revendedora("Paula", "B", almacendeprueba)
-otrarevendedoratest.Vender(remera1)
-otrarevendedoratest.ShowPedidos()
+# revendedoratest = Revendedora("Martita", "A", almacendeprueba)
+# revendedoratest.Vender(remera1)
+# almacendeprueba.ShowStock()
+# otrarevendedoratest = Revendedora("Paula", "B", almacendeprueba)
+# otrarevendedoratest.Vender(remera1)
+# otrarevendedoratest.ShowPedidos()
 
 
 
