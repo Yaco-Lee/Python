@@ -3,47 +3,94 @@
 # This file contains two main sections, first one is the data of the actor, second one is the behavior
 
 
+from flask import Flask
+from flask_restful import Resource, Api
+from dataclasses import dataclass
+import json
+
+
+app = Flask(__name__)
+api = Api(app)
+
+
+@dataclass  
 class Ropa:
+    nombre: str
+    talla: str  
+    codigodebarra: str
+    precio: float = 0.0
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+
+
     
-    def __init__(self, nombre : str, talla : str, precio : int, codigoDeBarra : str): # los nombres de los argumentos van con camelCase
-        ### ---- DATA ---- ###
-        self.Nombre = nombre
-        self.Talla = talla # los nombres de los atributos (propiedades, caracteristicas) de la clase van con PascalCase
-        self.Precio = precio
-        self.CodigoDeBarra = codigoDeBarra
 
+    # def __init__(self, nombre : str, talla : str, precio : int, codigoDeBarra : str): # los nombres de los argumentos van con camelCase
+    #     ### ---- DATA ---- ###
+    #     self.Nombre = nombre
+    #     self.Talla = talla # los nombres de los atributos (propiedades, caracteristicas) de la clase van con PascalCase
+    #     self.Precio = precio
+    #     self.CodigoDeBarra = codigoDeBarra
 
-
-class Gloria:
+class Gloria(Resource):
     
+    stock = [] # static variable as an empty list
+
     # input -> proceso de esa informacion -> output
     def __init__(self): 
         ### ---- DATA ---- ###
-        self.Stock = []  # [un objeto Ropa, otro objeto Ropa]
+        #self.Stock = []  # [un objeto Ropa, otro objeto Ropa]
         self.Revendedoras = []
     
      ### ---- BEHAVIOR ---- ###
-    def AddToStock(self, unaRopa):  ### TAREAAAAAAAAAA ###### 
-        self.Stock.append(unaRopa)
+
+    def get(self):
+        stockAsJson = []
+        for ropa in Gloria.stock:
+            stockAsJson.append(ropa.  ())
+        return {"stock" : stockAsJson}     
+
+    def post(self):
+        ropacreada = Ropa("buzo", "L", "B1231", 1300.5)
+        self.AddToStock(ropacreada)
+        self.ShowStock()
+        return {"codigoDeBarra" : ropacreada.toJSON()}
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+
+    def AddToStock(self, unaRopa: "Ropa"):
+        Gloria.stock.append(unaRopa)
     
     def RemoveFromStock(self, ciertaRopa : "Ropa"):
-        quitarEstaRopa = next(ropa for ropa in self.Stock if ropa.CodigoDeBarra == ciertaRopa.CodigoDeBarra) # a partir de la funcion next estamos haciendo una busqueda en el stock por una ropa con el mismo codigo de barra
-        self.Stock.remove(quitarEstaRopa)
+        quitarEstaRopa = next(ropa for ropa in Gloria.stock if ropa.CodigoDeBarra == ciertaRopa.CodigoDeBarra) # a partir de la funcion next estamos haciendo una busqueda en el stock por una ropa con el mismo codigo de barra
+        Gloria.stock.remove(quitarEstaRopa)
     
     def ShowStock(self):
-        if len(self.Stock) == 0:
+        if len(Gloria.stock) == 0:
             print("Nada por aquí")
-        else:
-            for itemRopa in self.Stock: 
-                print("Tenemos {} con el codigo {}".format(itemRopa.Nombre, itemRopa.CodigoDeBarra))
-            
+        else: 
+            print(Gloria.stock)
+
+
+        # else:
+        #     for itemRopa in self.Stock: 
+        #         print("Tenemos {} con el codigo {}".format(itemRopa.Nombre, itemRopa.CodigoDeBarra))
+    
+
+
+
+
     # TODO please, do not use for the moment    
     def CountStock(self, consultaRopa: "Ropa"):        
-        return sum(ropa.Nombre == consultaRopa.Nombre and ropa.Talla == ropa.Talla for ropa in self.Stock)
+        return sum(ropa.Nombre == consultaRopa.Nombre and ropa.Talla == ropa.Talla for ropa in Gloria.stock)
       
     # revendedora le pide al almacen que busque una determinada ropa y se la de
     def SearchRopa(self, searchRopa: "Ropa") -> "Ropa":
-        ropaEncontrada = next(ropa for ropa in self.Stock if ropa.Nombre == ciertaRopa.Nombre and ropa.Talla == ciertaRopa.Talla)
+        ropaEncontrada = next(ropa for ropa in Gloria.stock if ropa.Nombre == searchRopa.Nombre and ropa.Talla == searchRopa.Talla)
         return ropaEncontrada
 
 
@@ -88,74 +135,20 @@ class Revendedora:
 # Las propiedades (self.<nombre de la propiedad> dentro del metodo __init__ de una clase) son informacion inherente al objeto, como tambien relaciones con otros objetos
 # si un almacen tiene muchas revendedoras, la popiedad va a ser una lista de objetos ->  self.Revendedoras = []
 # si una revendedora tiene un (1) almacen, la popiedad va a ser un (1) objeto -> self.Gloria = Gloria()
-                
 
-# DEMO
+# API
+# A partir de aca definimos nuestra API
+# api.add_resource(User, '/users')
 
-# gloria = Gloria()
-# print("--- vamos a revisar el stock del almacen primero ---")
-# gloria.ShowStock()
-# gloria.RemoveFromStock("una remera")
-# print("--- vamos a revisar el stock del almacen de nuevo ---")
-# gloria.ShowStock()
+api.add_resource(Gloria, "/stock")
 
-# print("--- Setup ---")
-# gloria = Gloria()
-# yaco = Gloria()
-# silvinaRevendedora = Revendedora("Silvina", "A", gloria)
-# print("--- vamos a revisar el stock del almacen primero ---")
-# gloria.ShowStock()
-# print("--- Silvina vende una remera ---")
-# silvinaRevendedora.Vender("una remera")
-# print("--- vamos a revisar el stock del almacen de nuevo ---")
-# gloria.ShowStock()
+app.run(debug=True)
 
-# revendedoranueva = Revendedora("Laura","A", gloria)
-# revendedoranueva2 = Revendedora("Luisa", "B", yaco)
+# Tests
 
-# print("------ Creo una Gloria y muestro el stock, tiene que comenzar con dos remeras ---------")
-# gloria = Gloria()
-# gloria.ShowStock()
-# print(" ----- Busco una remera ------")
-# cantidadDeremeras = gloria.FindStock("una remera")
-# print(" ----- resultado = {} ------".format(cantidadDeremeras))
+#gloria = Gloria()
 
+#remera = Ropa("remera", "S", "AAAA1111", 15.5)
 
-# gloria = Gloria()
-# print("El stock cuando creas la primer Gloria")
-# gloria.ShowStock()
-
-# print("Agrego una remera en la primer Gloria")
-# gloria.AddToStock("una remera")
-# print("Nuevo stock")
-# gloria.ShowStock()
-
-# print("qué estás buscando?")
-# gloria.FindStock("una remera")
-
-# print("Quito una remera")
-# print("Nuevo stock")
-# gloria.RemoveFromStock("una remera")
-# gloria.ShowStock()
-
-# -------------------------------
-# ----- Tests -----
-
-almacendeprueba = Gloria()
-remera1 = Ropa("remeraS", "S", 200, "AAA111")
-almacendeprueba.AddToStock(remera1)
-almacendeprueba.ShowStock()
-# almacendeprueba.RemoveFromStock(remera1.Nombre)
-# almacendeprueba.ShowStock()
-# revendedoratest = Revendedora("Martita", "A", almacendeprueba)
-# revendedoratest.Vender(remera1)
-# almacendeprueba.ShowStock()
-# otrarevendedoratest = Revendedora("Paula", "B", almacendeprueba)
-# otrarevendedoratest.Vender(remera1)
-# otrarevendedoratest.ShowPedidos()
-
-
-
-
-
-
+#gloria.AddToStock(remera)
+#print(gloria.ShowStock())
