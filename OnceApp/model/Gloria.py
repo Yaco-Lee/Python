@@ -49,7 +49,7 @@ class Gloria(Resource):
     def get(self):
         stockAsJson = []
         for ropa in Gloria.stock:
-            stockAsJson.append(ropa.  ())
+            stockAsJson.append(ropa())
         return {"stock" : stockAsJson}     
 
     def post(self):

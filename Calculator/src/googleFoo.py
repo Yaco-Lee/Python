@@ -1,46 +1,55 @@
-import math
-import random
+# import math
 
 def solution(n):
-    poneleNombreYaquin = set()
+    primeSet = set()
     commLambdaPrimeList = []
 
-    poneleNombreYaquin.add(2)
+    primeSet.add(2)
     commLambdaPrimeList.append(2)
 
     for num in range(3,25000):
-        is_prime(num, commLambdaPrimeList, poneleNombreYaquin)      
+        max_divisor = math.floor(math.sqrt(num))
+        isPrime = True
+        for d in range(2, 1 + max_divisor):
+            if num % d == 0:
+                isPrime = False
+                break 
+        exists = num in primeSet
+        if (not exists and isPrime):
+            primeSet.add(num)
+            commLambdaPrimeList.append(num)      
 
     commLambdaPrimeList[n:n+5]
 
-    primosComoTexto = ''.join([str(num) for num in commLambdaPrimeList])
+    strPrimes = ''.join([str(num) for num in commLambdaPrimeList])
 
-    return primosComoTexto[n:n+5]
+    return str(strPrimes[n:n+5])
 
-def is_prime(n, commLambdaPrimeList, poneleNombreYaquin):
-    max_divisor = math.floor(math.sqrt(n))
-    isPrime = True
-    for d in range(2, 1 + max_divisor):
-        if n % d == 0:
-            isPrime = False
-            break
-    exists = n in poneleNombreYaquin 
-    if (not exists and isPrime):
-        poneleNombreYaquin.add(n)
-        commLambdaPrimeList.append(n)
+    
+    # def is_prime(n, commLambdaPrimeList, primeSet):
+    #     max_divisor = math.floor(math.sqrt(n))
+    #     isPrime = True
+    #     for d in range(2, 1 + max_divisor):
+    #         if n % d == 0:
+    #             isPrime = False
+    #             break
+    #     exists = n in primeSet
+    #     if (not exists and isPrime):
+    #         primeSet.add(n)
+    #         commLambdaPrimeList.append(n)
 
 
 ## Test de funcion solution
 ## Python cases
 # Input:
 # Output:
-print('funciono? {}'.format("23571" == solution(0)))
+# print(solution(0))
+# print('funciono? {}'.format("23571" == solution(0)))
 
 # Input:
-solution(3)
 # Output:
 #    71113
-print('funciono? {}'.format("71113" == solution(3)))
+#print('funciono? {}'.format("71113" == solution(3)))
 
 
 
@@ -68,3 +77,22 @@ print('funciono? {}'.format("71113" == solution(3)))
 
 
 
+def answer(b):
+    bag = ""
+    for num in range(0,20500):
+        if num > 1:
+            for j in range(2,num):
+                if (num % j) == 0:
+                    break
+            else:
+                if len(bag) >= 10006:
+                    break
+                else:
+                    bag += str(num)
+    return bag[b:b+5]
+
+
+
+
+
+print('funciono? {}'.format("23571" == answer(0)))
